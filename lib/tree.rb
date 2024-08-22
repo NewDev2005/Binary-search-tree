@@ -69,5 +69,24 @@ class Tree
       end
     end
   end
+
+  def delete(value)
+    root = @root
+    until root.nil?
+     if !root.left_child.nil? && root.left_child.data == value 
+      root.left_child = nil
+      break 
+      elsif !root.right_child.nil? && root.right_child.data == value 
+        root.right_child = nil 
+        break 
+     end
+     
+      if value < root.data
+        root = root.left_child
+      else
+        root = root.right_child
+      end
+    end
+  end
 end
 
