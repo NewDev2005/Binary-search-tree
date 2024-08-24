@@ -72,15 +72,44 @@ class Tree
 
   def delete(value)
     root = @root
-    until root.nil?
-     if !root.left_child.nil? && root.left_child.data == value 
+    until root.nil? 
+      #This will delete a leaf node 
+     if !root.left_child.nil? && root.left_child.left_child.nil? && root.left_child.right_child.nil? && root.left_child.data == value 
       root.left_child = nil
       break 
-      elsif !root.right_child.nil? && root.right_child.data == value 
+      elsif !root.right_child.nil? && root.right_child.left_child.nil? && root.right_child.right_child.nil? && root.right_child.data == value 
         root.right_child = nil 
         break 
      end
-     
+
+     #this will delete a node with single child
+     if !root.left_child.nil? && root.right_child.nil?
+      if root.data == value && !root.left_child.data.nil?   
+        root.data = root.left_child.data
+        root.left_child = nil 
+        break 
+      end
+     elsif root.left_child.nil? && !root.right_child.nil?
+       if root.data == value && !root.right_child.data.nil?
+         root.data = root.right_child.data
+         root.right_child = nil 
+         break
+       end
+    end
+
+    #this will delete a node with both children 
+    if root.data == value && !root.left_child.nil? && !root.right_child.nil? && !root.right_child.left_child.nil? 
+      node = root.right_child
+      until node.left_child.nil?
+        node = node.left_child 
+      end
+      root.data = node.data 
+      root.right_child.left_child = node.right_child
+    elsif root.data == value && !root.left_child.nil? && !root.right_child.nil? && root.left_child.left_child.nil? && root.left_child.right_child.nil? && root.right_child.left_child.nil? && root.right_child.right_child.nil?
+      root.data = root.right_child.data 
+      root.right_child = nil 
+    end 
+
       if value < root.data
         root = root.left_child
       else
