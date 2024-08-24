@@ -105,9 +105,11 @@ class Tree
       end
       root.data = node.data 
       root.right_child.left_child = node.right_child
+      break 
     elsif root.data == value && !root.left_child.nil? && !root.right_child.nil? && root.left_child.left_child.nil? && root.left_child.right_child.nil? && root.right_child.left_child.nil? && root.right_child.right_child.nil?
       root.data = root.right_child.data 
       root.right_child = nil 
+      break 
     end 
 
       if value < root.data
@@ -116,6 +118,19 @@ class Tree
         root = root.right_child
       end
     end
+  end
+
+  def find(value)
+   root = @root 
+   until root.nil?
+     if value > root.data 
+       root = root.right_child 
+     elsif value < root.data 
+      root = root.left_child
+     elsif value == root.data 
+      return root 
+     end
+   end
   end
 end
 
