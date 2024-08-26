@@ -132,5 +132,36 @@ class Tree
      end
    end
   end
+
+  def level_order
+    queue = [] 
+    node_data = []
+    nodes = []
+    root = @root 
+    return if root.nil?
+    queue.push(root)
+    until queue.empty?
+      if !queue.empty?
+        current_node = queue.first 
+        # puts current_node.data 
+        node_data.push(current_node.data)
+        nodes.push(current_node)
+      end
+      if !current_node.left_child.nil?
+        queue.push(current_node.left_child)
+      end
+      if !current_node.right_child.nil?
+        queue.push(current_node.right_child)
+      end
+      queue.shift
+    end
+    if !block_given?
+      return  node_data
+    elsif block_given?
+      nodes.each do |node|
+        yield(node)
+      end
+    end
+  end
 end
 
