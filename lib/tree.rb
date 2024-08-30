@@ -143,7 +143,6 @@ class Tree
     until queue.empty?
       if !queue.empty?
         current_node = queue.first 
-        # puts current_node.data 
         node_data.push(current_node.data)
         nodes.push(current_node)
       end
@@ -163,5 +162,35 @@ class Tree
       end
     end
   end
+
+  def preorder
+    stack = []
+    results = []
+    node_values = []
+    root = @root 
+    stack.push(root)
+    until stack.empty?
+      current_node = stack.last
+      results.push(current_node) 
+      node_values.push(current_node.data)
+      stack.pop 
+      if !current_node.right_child.nil?
+        stack.push(current_node.right_child)
+      end
+
+      if !current_node.left_child.nil?
+        stack.push(current_node.left_child)
+      end
+    end
+    if block_given?
+      results.each do |node|
+        yield(node)
+      end
+    else
+     node_values
+    end
+  end
+
+
 end
 
