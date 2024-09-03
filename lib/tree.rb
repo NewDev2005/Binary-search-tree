@@ -1,10 +1,11 @@
 require_relative 'node'
 # require 'pry-byebug'
 class Tree 
-  attr_accessor :root
+  attr_accessor :root, :results 
   def initialize(arr,root=nil)
     self.root = root 
     @arr = arr 
+    @results = []
   end
 
   def sort_arr(arr)
@@ -77,7 +78,7 @@ class Tree
      if !root.left_child.nil? && root.left_child.left_child.nil? && root.left_child.right_child.nil? && root.left_child.data == value 
       root.left_child = nil
       break 
-      elsif !root.right_child.nil? && root.right_child.left_child.nil? && root.right_child.right_child.nil? && root.right_child.data == value 
+     elsif !root.right_child.nil? && root.right_child.left_child.nil? && root.right_child.right_child.nil? && root.right_child.data == value 
         root.right_child = nil 
         break 
      end
@@ -95,7 +96,7 @@ class Tree
          root.right_child = nil 
          break
        end
-    end
+     end
 
     #this will delete a node with both children 
     if root.data == value && !root.left_child.nil? && !root.right_child.nil? && !root.right_child.left_child.nil? 
@@ -122,6 +123,7 @@ class Tree
 
   def find(value)
    root = @root 
+   puts "root is a #{root.class}"
    until root.nil?
      if value > root.data 
        root = root.right_child 
@@ -177,7 +179,6 @@ class Tree
       if !current_node.right_child.nil?
         stack.push(current_node.right_child)
       end
-
       if !current_node.left_child.nil?
         stack.push(current_node.left_child)
       end
@@ -191,6 +192,45 @@ class Tree
     end
   end
 
+  def inorder(root)
+    return if root.nil?
+    @results.push(root)
+    inorder(root.left_child)
+    inorder(root.right_child)
+    nodes_data = []
+    if block_given?
+      @results.each do |node|
+        yield(node)
+      end
+    else
+      @results.each do |node|
+        nodes_data.push(node.data)
+      end
+      nodes_data
+    end
+  end
 
+  def postorder(root)
+    return if root.nil?
+    postorder(root.left_child)
+    postorder(root.right_child)
+    puts root.data
+  end
+
+  def height(root)
+  return -1 if root.nil?
+  [height(root.left_child), height(root.right_child)].max + 1
+  end 
+
+  def depth(value, root=@root)
+    node = find(value)
+    puts node.class
+    root = @root 
+    return 0 if root.nil?
+    return if root.left_child.data == node.data
+    depth(root.left_child)
+    depth(root.right_child)
+    p caller.inspect
+  end
 end
 
