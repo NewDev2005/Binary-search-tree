@@ -5,7 +5,8 @@ class Tree
   def initialize(arr,root=nil)
     self.root = root 
     @arr = arr 
-    @results = []
+    @inorder_results = []
+    @postorder_results = []
   end
 
   def sort_arr(arr)
@@ -123,7 +124,6 @@ class Tree
 
   def find(value)
    root = @root 
-   puts "root is a #{root.class}"
    until root.nil?
      if value > root.data 
        root = root.right_child 
@@ -192,32 +192,48 @@ class Tree
     end
   end
 
-  def inorder(root)
+  def inorder(root=@root)
     return if root.nil?
-    @results.push(root)
     inorder(root.left_child)
-    inorder(root.right_child)
+    @inorder_results.push(root)
+    inorder(root.right_child) 
     nodes_data = []
     if block_given?
-      @results.each do |node|
+      @inorder_results.each do |node|
         yield(node)
       end
     else
-      @results.each do |node|
+      @inorder_results.each do |node|
         nodes_data.push(node.data)
       end
       nodes_data
     end
   end
 
-  def postorder(root)
+  def postorder(root=@root)
     return if root.nil?
     postorder(root.left_child)
     postorder(root.right_child)
-    puts root.data
+    @postorder_results.push(root)
+    nodes_data = []
+    if block_given?
+      @postorder_results.each do |node|
+        yield(node)
+      end
+    else 
+      @postorder_results.each do |node|
+      nodes_data.push(node.data) 
+      end
+      nodes_data
+    end
   end
 
-  def height(root)
+  def empty_arr
+    @inorder_results = []
+    @postorder_results = []
+  end
+
+  def height(root=@root)
   return -1 if root.nil?
   [height(root.left_child), height(root.right_child)].max + 1
   end 
@@ -230,7 +246,30 @@ class Tree
     return if root.left_child.data == node.data
     depth(root.left_child)
     depth(root.right_child)
-    p caller.inspect
+  end
+
+  def balanced?(root=@root)
+    return true  if root.nil?
+    if height(root.left_child) >= height(root.right_child)
+      if height(root.left_child) - height(root.right_child) <= 1
+        return true 
+      else 
+        return false 
+      end
+    elsif height(root.right_child) >= height(root.left_child)
+      if height(root.right_child) - height(root.left_child) <= 1
+        return true 
+      else 
+        return false 
+      end
+    end
+  end
+
+  def rebalance
+    empty_arr
+    @arr = inorder
+    p @arr
+    @arr 
   end
 end
 
